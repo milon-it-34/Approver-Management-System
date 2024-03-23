@@ -1,0 +1,116 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Request</title>
+    <style>
+        /*body {*/
+            /*font-family: Arial, sans-serif;*/
+            /*margin: 0;*/
+            /*padding: 20px;*/
+        /*}*/
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .width_balance{
+            width: 20%;
+        }
+    </style>
+</head>
+{% include 'auth/header.html' %}
+{% include 'auth/base.html' %}
+<body>
+    <div class="container">
+        <h2 style="color: crimson">Add Request</h2>
+        <form action="/request/add_request/" method="POST">
+            {% csrf_token %}
+
+            <div id="error_id">
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="width_balance">
+                <label for="student_no">Student ID:<br></label>
+                <input type="text" id="student_no" name="student_no" required>
+            </div>
+            <div class="width_balance">
+                <label for="batch_id" style=" display: block; margin-bottom: 8px;">Batch:</label>
+                  <select name="batch_id" id="batch_id" style="padding: 10px; border: 1px solid #4caf50; border-radius: 4px; width: 100%; margin-bottom: 16px;">
+                    {% for key, value in batch.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+            </div>
+            <div>
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="6" required></textarea>
+            </div>
+            <br>
+            <div>
+                <label for="date">Request Date:</label>
+                <input type="date" id="date" name="date" value="{{ date_today }}" required>
+            </div>
+            <div>
+                <label for="teacher_email">Teacher Email:</label>
+                <input type="email" id="teacher_email" name="teacher_email" required placeholder="ex@mbstu.ac.bd" style="color: firebrick">
+            </div>
+            {% if form.teacher_email.errors %}
+                    <span style="color: red;">{{ form.teacher_email.errors }}</span>
+                {% endif %}
+            <br>
+            <div>
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</body>
+<script >
+
+    $('#student_no').val('IT-');
+
+     $(document).ready(function() {
+        setTimeout(function() {
+            $('#error_id').hide();
+        }, 5000);
+    });
+
+</script>
+

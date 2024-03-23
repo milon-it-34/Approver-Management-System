@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/images/MBSTU_Logo.jpg" type="image/jpg">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <style>
+
+        .img-fluid{
+            width: 20%;
+        }
+        .navbar-nav .nav-link {
+            font-size: 18px;
+            padding: 10px 20px;
+            color: white !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: #13947A !important;
+        }
+
+        .navbar-nav .nav-item.active {
+            background-color: #13947A;
+            border-radius: 5px;
+        }
+        .container-fluid.bg-green {
+            background-color: #1d193d;
+        }
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: black;
+            text-align: center;
+            padding: 10px 0;
+            overflow-y: auto; /* Allow vertical scrolling */
+            max-height: 80vh; /* Set a maximum height */
+            background-color: #ffffff; /* Change background color if necessary */
+            z-index: 1000; /* Ensure footer is above other content */
+        }
+
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container-fluid bg-green text-white py-3">
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <div class="logo">
+                    <img src="/static/images/MBSTU_Logo.jpg" class="img-fluid" alt="Logo" style="margin-top: -3%">
+                </div>
+            </div>
+            <div class="col-6 col-md-9">
+                <nav class="navbar navbar-expand-md navbar-dark">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/" style="font-size: 20px;">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" style="font-size: 20px;">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" style="font-size: 20px;">Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" style="font-size: 20px;">Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" style="font-size: 20px;">Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" style="font-size: 20px;">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout/" style="font-size: 20px;">Logout</a>
+                            </li>
+                             <li class="nav-item">
+                                <b class="nav-link" style="font-size: 20px; background-color: lightslategrey;border-radius:10px
+                                 ">{{user.username}}</b>
+                            </li>
+                        </ul>
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Your content goes here -->
+
+<footer>
+    <p style="margin-bottom: 0">© 2024 Department of ICT – Developed by Milon Ahmed</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

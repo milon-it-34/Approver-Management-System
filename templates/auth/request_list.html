@@ -1,0 +1,185 @@
+{% include 'auth/header.html' %}
+{% include 'auth/base.html' %}
+{% include 'auth/link.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request List</title>
+    <!-- Add DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+    <style>
+        .dataTables_wrapper {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .table-container {
+            width: 90%;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        /* Style for action links */
+        .action-link {
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .alert-success {
+            background-color: #28a745;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            position: fixed;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+        .alert-danger {
+            background-color: darkred;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            position: fixed;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="top-bar"></div>
+
+    <h2 style="margin-left: 5%;color: darkgreen">Request List</h2>
+    <div class="table-container">
+        <div id="request-list-container" style="overflow-y: auto;">
+            <table id="request-list" class="display">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Batch</th>
+                        <th>Teacher Name</th>
+                        <th>Subject</th>
+                        <th>Description</th>
+                        <th>Teacher Email</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="request-list-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchRequests();
+        });
+
+        function fetchRequests() {
+            fetch('/request/request_list/', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => renderRequests(data.requests))
+            .catch(error => console.error('Error fetching requests:', error));
+        }
+
+        let dataTableInitialized = false;
+
+        function renderRequests(requests) {
+            const body = document.getElementById('request-list-body');
+            body.innerHTML = '';
+            requests.forEach(request => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${request.student_no}</td>
+                    <td>${request.student_name}</td>
+                    <td>${request.batch_name}</td>
+                    <td>${request.teacher_name}</td>
+                    <td>${request.subject}</td>
+                    <td>${request.description}</td>
+                    <td>${request.teacher_email}</td>
+                    <td>${request.date}</td>
+                    <td style="color: ${request.status === 'Approved' ? 'green' : (request.status === 'Rejected' ? '#db2828' : 'inherit')}">${request.status}</td>
+                    <td>
+                         <div>
+                        {% if is_teacher %}
+                             <a href="#" onclick="status_changeRequest(${request.id}, 1)">Approve</a>
+                             <a href="#" onclick="status_changeRequest(${request.id}, 0)" style="color: darkred;position: absolute;margin-left: 0.5%">Reject</a>
+                        {% endif %}
+                        </div>
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+
+            if (!dataTableInitialized) {
+                // Initialize DataTables only once
+                $('#request-list').DataTable({
+                    scrollY: '450px'
+                });
+                dataTableInitialized = true;
+            }
+        }
+
+
+       function status_changeRequest(requestId, check) {
+
+            fetch(`/request/status_change/${requestId}/?status=`+check, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                // body: JSON.stringify({ status: 2 })
+            })
+            .then(response => {
+                const topBar = document.getElementById('top-bar');
+                if (response.ok) {
+                    topBar.innerHTML = '<div class="alert alert-success">Status has been changed successfully.</div>';
+                    fetchRequests();
+                    setTimeout(() => {
+                        topBar.innerHTML = '';
+                    }, 3000);
+                } else if (response.status === 400) {
+                    response.json().then(data => {
+                        topBar.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                    });
+
+                    setTimeout(() => {
+                    topBar.innerHTML = '';
+                    }, 3000);
+                }
+                else {
+                    console.error('Failed to approve request');
+                }
+            })
+            .catch(error => console.error('Error approving request:', error));
+        }
+
+        function rejectRequest(requestID) {
+
+        }
+
+
+
+    </script>
+</body>

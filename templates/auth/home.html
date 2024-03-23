@@ -1,0 +1,115 @@
+{% include 'auth/header.html' %}
+{% include 'auth/base.html' %}
+{% include 'auth/link.html' %}
+
+{% block body %}
+<title>Home</title>
+<style>
+    .container {
+        border: 2px solid gray;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .welcome-message {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .not-logged-in {
+        border: 2px solid #dc3545;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .buttons {
+        margin-top: 20px;
+    }
+    canvas {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            {% if user.is_authenticated %}
+                <div class="welcome-message">
+                    <h1>Welcome</h1>
+                    <p style="font-weight: bold">Hi <span style="color: #0a53be">{{ user.full_name }}</span>, Welcome to Approver System!</p>
+                </div>
+                <div class="btn-group">
+                    <a href="request/student_list/" class="btn btn-dark"style="background-color: darkslategrey;">Student List</a>
+                    {% if not is_teacher %}
+                        <a href="request/add_request/" class="btn btn-primary">Add Request</a>
+                    {% endif %}
+                    <a href="request/request_list/" class="btn btn-success">Request List</a>
+
+                </div>
+                <div style="width: 400px; margin: auto;">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            {% else %}
+                <div class="not-logged-in">
+                    <p>You are not logged in!</p>
+                    <div class="buttons">
+                        <a href="/login/" class="btn btn-success mt-3">Log In</a>
+                        <a href="/signup/?role=teacher" class="btn btn-success mt-3">Sign Up As Teacher</a>
+                        <a href="/signup/?role=student" class="btn btn-success mt-3">Sign Up As Student</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    // Data for the chart
+    fetch('/request/api/request_data/')
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('pieChart').getContext('2d');
+            var backgroundColors = generateBackgroundColors(data.labels.length);
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Count',
+                        data: data.data_list,
+                         backgroundColor: backgroundColors,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Student Wise Request Count'
+                        }
+                    }
+                }
+            });
+        });
+
+    function generateBackgroundColors(length) {
+        var colors = [];
+        for (var i = 0; i < length; i++) {
+            var color = 'rgba(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', 0.5)';
+            colors.push(color);
+        }
+        return colors;
+    }
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+  </script>
+
+{% endblock body %}

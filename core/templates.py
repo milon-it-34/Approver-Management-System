@@ -38,3 +38,33 @@ def email_template(full_name, teacher_name, subject, description, student_no, da
     </html>
     """
     return html_message
+
+
+def status_template(student_name, status_text, teacher_name, teacher_email):
+    html_message = f"""
+    <!DOCTYPE html>
+        <html lang="en">
+        <body>
+            <p>
+                Dear <strong style="color: rgb(53, 53, 97);">{student_name} </strong>,
+                <br><br>
+                <p>
+                  <h2>You Request has been <strong style="color: royalblue;">{status_text}</strong></h2>
+              </p>      
+            <p>
+                <br>
+                Sincerely,
+                <br>
+                <br>
+                <strong>{teacher_name}</strong>
+                <br>
+                <span><strong style="color: rgb(95, 89, 89);">Email: </strong> {teacher_email}</span>
+                <br>
+                <br>
+                <b>Department of Information and Communication Technology<br>
+                @ Mawlana Bhashani Science and Technology University</b>
+            </p>
+        </body>
+        </html>
+    """
+    return html_message

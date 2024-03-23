@@ -8,7 +8,7 @@ from datetime import datetime
 from core.task import send_email
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from core.templates import email_template
+from core.templates import email_template, status_template
 
 
 def add_request(request, **kwargs):
@@ -125,13 +125,13 @@ def request_list(request, **kwargs):
     return render(request, 'auth/request_list.html', {'is_teacher': is_teacher})
 
 
-def status_mail_send(full_name, status_id, from_email, to_email, request_obj, status_flag):
+def status_mail_send(student_name, teacher_name, teacher_email, status_id, from_email, to_email, request_obj,
+                     status_flag):
+    subject = 'Request Status'
     if status_flag == '0':
-        subject = 'Request Rejected'
-        message = 'Hello Dear, ' + full_name + '\nYour Request Has been Rejected.'
+        message = status_template(student_name, 'Rejected', teacher_name, teacher_email)
     else:
-        subject = 'Request Approved'
-        message = 'Hello Dear, ' + full_name + '\nYour Request Has been Approved.'
+        message = status_template(student_name, 'Approved', teacher_name, teacher_email)
     try:
         send_email(from_email, to_email, subject, message)
         request_obj.status = status_id
@@ -157,9 +157,13 @@ def status_change(request, request_id, **kwargs):
     to_email = student.email
     try:
         if status_flag == '1':
-            status_mail_send(student.full_name, E_Status.Approved.index, from_email, to_email, request_obj, status_flag)
+            status_mail_send(student.full_name, teacher.full_name, teacher.email, E_Status.Approved.index, from_email,
+                             to_email,
+                             request_obj, status_flag)
         else:
-            status_mail_send(student.full_name, E_Status.Rejected.index, from_email, to_email, request_obj, status_flag)
+            status_mail_send(student.full_name, teacher.full_name, teacher.email, E_Status.Rejected.index, from_email,
+                             to_email,
+                             request_obj, status_flag)
     except Exception as e:
         raise e
 

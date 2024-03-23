@@ -31,6 +31,8 @@ from core.task import send_email
 
 def signup(request, **kwargs):
     role = request.GET.get('role', None)
+    from enums import E_Teachers
+    teachers = E_Teachers.dict(empty=True)
     if request.method == 'POST':
         confirmation_code = request.POST.get('confirmation_code')
         if confirmation_code:
@@ -59,12 +61,21 @@ def signup(request, **kwargs):
                 signup_data = request.POST.dict()
                 signup_data['role'] = role
                 request.session['signup_data'] = signup_data
+                error_message = "Please select a teacher."
+                check = False
                 if role == 'student':
                     teacher_id = request.POST.get('teacher_id')
+                    if not teacher_id:
+                        check = True
                     request.session['teacher_id'] = teacher_id
                 else:
                     parent_id = request.POST.get('parent_id')
                     request.session['parent_id'] = parent_id
+                    if not parent_id:
+                        check = True
+                if check:
+                    return render(request, 'auth/signup.html',
+                                  {'form': form, 'role': role, 'error_message': error_message, 'teachers': teachers})
 
                 request.session['role'] = role
                 confirmation_code = ''.join(random.choices('0123456789', k=6))
@@ -75,8 +86,6 @@ def signup(request, **kwargs):
     else:
         form = SignUpForm()
 
-    from enums import E_Teachers
-    teachers = E_Teachers.dict(empty=True)
     return render(request, 'auth/signup.html', {'form': form, 'role': role, 'teachers': teachers})
 
 

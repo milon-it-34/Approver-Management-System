@@ -114,6 +114,9 @@
           <option value="{{ key }}">{{ value }}</option>
         {% endfor %}
       </select>
+      {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+      {% endif %}
     {% else %}
       <label for="parent_id" style=" display: block; margin-bottom: 8px;">Select Me:</label>
       <select name="parent_id" id="parent_id" style="padding: 10px; border: 1px solid #4caf50; border-radius: 7px; width: 100%; margin-bottom: 16px;">
@@ -121,6 +124,9 @@
           <option value="{{ key }}">{{ value }}</option>
         {% endfor %}
       </select>
+      {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+      {% endif %}
     {% endif %}
 
     <button type="submit">

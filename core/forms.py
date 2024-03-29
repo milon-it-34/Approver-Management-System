@@ -4,6 +4,7 @@ from django import forms
 from core.models import StudentRequest
 import re
 
+
 class StudentRequestForm(forms.ModelForm):
     class Meta:
         model = StudentRequest

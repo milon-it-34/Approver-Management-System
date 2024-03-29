@@ -40,11 +40,23 @@
         .width_balance{
             width: 20%;
         }
+        #loading-indicator {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top:10%;
+            padding: 20px;
+            border-radius: 10px;
+            width: 17%;
+        }
     </style>
 </head>
 {% include 'auth/header.html' %}
 {% include 'auth/base.html' %}
 <body>
+    <div id="loading-indicator" class="loading_indicator">
+        <img src="/static/images/loading.gif" alt="Loading..." style="width: 17%">
+    </div>
     <div class="container">
         <h2 style="color: crimson">Add Request</h2>
         <form action="/request/add_request/" method="POST">
@@ -97,7 +109,7 @@
                 {% endif %}
             <br>
             <div>
-                <input type="submit" value="Submit">
+                <input type="submit" id="submit_id" value="Submit">
             </div>
         </form>
     </div>
@@ -110,6 +122,9 @@
         setTimeout(function() {
             $('#error_id').hide();
         }, 5000);
+    });
+    $('#submit_id').click(function() {
+         $('.loading_indicator').show();
     });
 
 </script>
